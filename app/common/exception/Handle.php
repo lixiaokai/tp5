@@ -21,6 +21,16 @@ class Handle extends \think\exception\Handle
             return json(['code' => 422, 'msg'  => $e->getError(), 'data' => []], 422);
         }
 
+        // 业务异常
+        if ($e instanceof BizException) {
+            // return json(['code' => 200, 'msg'  => $e->getMessage(), 'data' => []], 422);
+        }
+
+        // 其他异常
+        if ($e instanceof \think\Exception) {
+            // return json(['code' => $e->getCode(), 'msg'  => $e->getMessage(), 'data' => []], 422);
+        }
+
         // 请求异常
         if ($e instanceof HttpException && request()->isAjax()) {
             return response($e->getMessage(), $e->getStatusCode());
