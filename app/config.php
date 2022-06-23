@@ -168,11 +168,16 @@ return [
 
     'log'                    => [
         // 日志记录方式，内置 file socket 支持扩展
-        'type'  => 'File',
+        'type'  => 'socket',
         // 日志保存目录
         'path'  => LOG_PATH,
         // 日志记录级别
         'level' => [],
+        // 以下配置当 type = socket 时才有效
+        'host'                  =>  'localhost',
+        'show_included_files'   =>  true,
+        'force_client_ids'      =>  ['slogId'],
+        'allow_client_ids'      =>  ['slogId'],
     ],
 
     // +----------------------------------------------------------------------
