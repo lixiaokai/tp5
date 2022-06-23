@@ -7,7 +7,6 @@ use app\common\controller\BaseAdminController;
 use app\common\exception\BizException;
 use app\common\service\AuthGroupService;
 use think\exception\DbException;
-use think\Request;
 use think\Response;
 
 /**
@@ -43,8 +42,6 @@ class GroupController extends BaseAdminController
 
     /**
      * 显示创建资源表单页.
-     *
-     * @return \think\Response
      */
     public function create()
     {
@@ -79,9 +76,6 @@ class GroupController extends BaseAdminController
 
     /**
      * 显示编辑资源表单页.
-     *
-     * @param  int  $id
-     * @return \think\Response
      */
     public function edit($id)
     {
@@ -93,7 +87,7 @@ class GroupController extends BaseAdminController
      *
      * @throws BizException|DbException
      */
-    public function update(AuthGroupValidate $validate, int $id)
+    public function update(AuthGroupValidate $validate, int $id): Response
     {
         $authGroup = $this->service->detail($id);
         $data = $validate->checked();
@@ -107,11 +101,8 @@ class GroupController extends BaseAdminController
 
     /**
      * 删除指定资源
-     *
-     * @param  int  $id
-     * @return \think\Response
      */
-    public function delete($id)
+    public function delete(int $id)
     {
         //
     }

@@ -2,8 +2,9 @@
 
 namespace app\common\service;
 
-use app\admin\model\AuthGroup;
 use app\common\exception\BizException;
+use app\common\model\AuthGroup;
+use app\common\repository\AuthGroupRepository;
 use think\db\Query;
 use think\exception\DbException;
 use think\Paginator;
@@ -11,13 +12,23 @@ use think\Paginator;
 class AuthGroupService
 {
     /**
+     * @var AuthGroupRepository
+     */
+    protected $repo;
+
+    public function __construct()
+    {
+        $this->repo = new AuthGroupRepository();
+    }
+
+    /**
      * 用户组 - 列表.
      *
      * @throws DbException
      */
     public function search(array $search = []): Paginator
     {
-        return (new AuthGroup)
+        return (new AuthGroup)->getQuery()
             ->where(static function (Query $query) use ($search) {
                 ! empty($search['name']) && $query->where('name', 'like', '%' . $search['name'] . '%');
         })
