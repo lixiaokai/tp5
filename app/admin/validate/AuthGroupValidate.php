@@ -8,13 +8,13 @@ class AuthGroupValidate extends BaseValidate
 {
     protected $rule = [
         'status' => ['require', 'integer'],
-        'title' => ['require'],
+        'name' => ['require'],
         'rules' => ['require'],
     ];
 
     protected $field = [
         'status' => '状态',
-        'title' => '名称',
+        'name' => '名称',
         'rules' => '规则',
     ];
 }

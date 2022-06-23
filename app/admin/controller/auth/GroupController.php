@@ -4,6 +4,7 @@ namespace app\admin\controller\auth;
 
 use app\admin\validate\AuthGroupValidate;
 use app\common\controller\BaseAdminController;
+use app\common\exception\BizException;
 use app\common\service\AuthGroupService;
 use think\exception\DbException;
 use think\Request;
@@ -12,14 +13,14 @@ use think\Response;
 /**
  * 用户组 - 控制器.
  */
-class Group extends BaseAdminController
+class GroupController extends BaseAdminController
 {
     /**
      * @var AuthGroupService $service
      */
     protected $service;
 
-    public function _initialize(): void
+    protected function _initialize(): void
     {
         $this->service = new AuthGroupService();
     }
@@ -31,9 +32,10 @@ class Group extends BaseAdminController
      */
     public function index(): Response
     {
+        $search = $this->request->param();
         $res = [
             'code' => 200,
-            'data' => $this->service->search(),
+            'data' => $this->service->search($search),
         ];
 
         return json($res);
@@ -50,27 +52,29 @@ class Group extends BaseAdminController
     }
 
     /**
-     * 保存新建的资源
+     * 用户组 - 创建.
      */
     public function save(AuthGroupValidate $validate): Response
     {
-        $data = $validate->checked();
+        $authGroup = $this->service->create($validate->checked());
 
         return json([
-            'method' => $this->request->isAjax(),
-            'data' => $data,
+            'code' => 200,
+            'data' => ['id' => $authGroup->id],
         ]);
     }
 
     /**
-     * 显示指定的资源
-     *
-     * @param  int  $id
-     * @return \think\Response
+     * 用户组 - 详情.
      */
-    public function read($id)
+    public function read($id): Response
     {
-        //
+        $authGroup = $this->service->detail($id);
+
+        return json([
+            'code' => 200,
+            'data' => $authGroup,
+        ]);
     }
 
     /**
@@ -85,15 +89,20 @@ class Group extends BaseAdminController
     }
 
     /**
-     * 保存更新的资源
+     * 用户组 - 更新.
      *
-     * @param  \think\Request  $request
-     * @param  int  $id
-     * @return \think\Response
+     * @throws BizException|DbException
      */
-    public function update(Request $request, $id)
+    public function update(AuthGroupValidate $validate, int $id)
     {
-        //
+        $authGroup = $this->service->detail($id);
+        $data = $validate->checked();
+        $this->service->update($authGroup, $data);
+
+        return json([
+            'code' => 200,
+            'data' => $authGroup,
+        ]);
     }
 
     /**
