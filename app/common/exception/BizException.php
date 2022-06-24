@@ -2,9 +2,14 @@
 
 namespace app\common\exception;
 
-class BizException extends BaseException
+use think\Exception;
+
+/**
+ * 业务 - 异常类.
+ */
+class BizException extends Exception
 {
     protected $message = '业务异常';
 
-    protected $code = 200;
+    protected $code = 400;
 }

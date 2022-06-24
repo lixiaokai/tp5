@@ -3,40 +3,59 @@
 namespace app\common\exception;
 
 use Exception;
+use think\App;
 use think\exception\HttpException;
 use think\exception\ValidateException;
 use think\Response;
 
 /**
  * 自定义异常处理.
- *
- * Todo: 待完善.
  */
 class Handle extends \think\exception\Handle
 {
+    /**
+     * @var int 默认状态码
+     */
+    protected $code = 500;
+
+    /**
+     * @var string 默认异常消息
+     */
+    protected $message;
+
     public function render(Exception $e): Response
     {
-        // 参数验证错误
-        if ($e instanceof ValidateException) {
-            return json(['code' => 422, 'msg'  => $e->getError(), 'data' => []], 422);
+        switch ($e) {
+            // Http 异常
+            case $e instanceof HttpException:
+                $this->code = $e->getStatusCode();
+                $this->message = $e->getMessage();
+                break;
+
+            // 验证器异常
+            case $e instanceof ValidateException:
+                $this->code = 422;
+                $this->message = $e->getError();
+                break;
+
+            // 业务异常
+            case $e instanceof BizException;
+                $this->code = $e->getCode();
+                $this->message = $e->getMessage();
+                break;
         }
 
-        // 业务异常
-        if ($e instanceof BizException) {
-            // return json(['code' => 200, 'msg'  => $e->getMessage(), 'data' => []], 422);
+        $data = [
+            'code' => $this->code,
+            'msg' => $this->message ?: $e->getMessage(),
+            'data' => null,
+        ];
+
+        // 开启 debug 时附加数据
+        if (App::$debug) {
+            $data['trace'] = $e->getTrace();
         }
 
-        // 其他异常
-        if ($e instanceof \think\Exception) {
-            // return json(['code' => $e->getCode(), 'msg'  => $e->getMessage(), 'data' => []], 422);
-        }
-
-        // 请求异常
-        if ($e instanceof HttpException && request()->isAjax()) {
-            return response($e->getMessage(), $e->getStatusCode());
-        }
-
-        // 剩下的交由原系统处理
-        return parent::render($e);
+        return Response::create($data, 'json');
     }
 }
