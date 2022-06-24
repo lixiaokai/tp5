@@ -22,3 +22,14 @@ cd tp5
 composer update
 ```
 
+# Todo
+
+1. 批量插入或更新实现 ( ON DUPLICATE KEY UPDATE ) InsertOnDuplicateKey
+
+参考 ( 实现前，打开下面的全部参考后再实现 )：
+- https://github.com/top-think/thinkphp/blob/master/ThinkPHP/Library/Think/Db/Driver/Mysql.class.php
+- https://github.com/top-think/think-orm/blob/2.0/src/db/builder/Mysql.php
+- http://www.04007.cn/article/490.html
+- https://dev.mysql.com/doc/refman/8.0/en/insert-on-duplicate.html
+- https://jiajunhuang.com/articles/2019_11_19-mysql_duplicate_key_update.md.html
+
