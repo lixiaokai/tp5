@@ -52,9 +52,9 @@ class Handle extends \think\exception\Handle
         ];
 
         // 开启 debug 时附加数据
-        if (App::$debug) {
-            $data['trace'] = $e->getTrace();
-        }
+        // if (App::$debug) {
+        //    $data['trace'] = $e->getTrace();
+        // }
 
         return Response::create($data, 'json');
     }
