@@ -173,6 +173,7 @@ return [
         'path'  => LOG_PATH,
         // 日志记录级别
         'level' => [],
+
         // 以下配置当 type = socket 时才有效
         'host'                  =>  'localhost',
         'show_included_files'   =>  true,
