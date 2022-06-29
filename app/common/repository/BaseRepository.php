@@ -4,6 +4,8 @@ namespace app\common\repository;
 
 use app\common\exception\DataSaveErrorException;
 use app\common\exception\DataNotFoundException;
+use Exception;
+use think\Config;
 use think\db\Query;
 use think\exception\DbException;
 use think\Loader;
@@ -51,6 +53,7 @@ abstract class BaseRepository
             }
             return $row;
         } catch (DbException $e) {
+            $message = $message . Config::get('app_debug') ? $e->getMessage() : '';
             throw new DataNotFoundException($message);
         }
     }
@@ -61,9 +64,10 @@ abstract class BaseRepository
     public function create(array $data): Model
     {
         try {
-            return $this->model::create($data);
-        } catch (\Exception $e) {
-            throw new DataSaveErrorException();
+            return $this->model::create($data, true);
+        } catch (Exception $e) {
+            $message = Config::get('app_debug') ? $e->getMessage() : '';
+            throw new DataSaveErrorException($message);
         }
     }
 
@@ -72,10 +76,15 @@ abstract class BaseRepository
      */
     public function update(Model $model, array $data): Model
     {
-        if ($model->save($data) === false) {
+        if ($model->allowField(true)->save($data) === false) {
             throw new DataSaveErrorException();
         }
 
         return $model;
+    }
+
+    public function delete(Model $model): bool
+    {
+        return (bool) $model->delete();
     }
 }
