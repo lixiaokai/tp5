@@ -17,4 +17,26 @@ class UserRepository extends BaseRepository
      * @var string 模型类
      */
     protected $modelClass = User::class;
+
+    /**
+     * 用户 - 启用.
+     */
+    public function enable(User $model): User
+    {
+        $model->status = User::STATUS_ENABLE;
+        $model->save();
+
+        return $model;
+    }
+
+    /**
+     * 用户 - 禁用.
+     */
+    public function disable(User $model): User
+    {
+        $model->status = User::STATUS_DISABLE;
+        $model->save();
+
+        return $model;
+    }
 }

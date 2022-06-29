@@ -26,7 +26,7 @@ class UserService
     }
 
     /**
-     * 用户组 - 列表.
+     * 用户 - 列表.
      *
      * @throws DbException
      */
@@ -40,7 +40,7 @@ class UserService
     }
 
     /**
-     * 用户组 - 详情.
+     * 用户 - 详情.
      *
      * @throws DataNotFoundException
      */
@@ -54,7 +54,7 @@ class UserService
     }
 
     /**
-     * 用户组 - 创建.
+     * 用户 - 创建.
      *
      * @throws DataSaveErrorException
      */
@@ -64,7 +64,7 @@ class UserService
     }
 
     /**
-     * 用户组 - 更新.
+     * 用户 - 更新.
      *
      * @throws DataSaveErrorException
      */
@@ -74,27 +74,27 @@ class UserService
     }
 
     /**
-     * 用户组 - 删除.
+     * 用户 - 删除.
      */
-    public function delete(User $model): bool
+    public function delete(User $model): void
     {
-        return true;
+        $this->repo->delete($model);
     }
 
     /**
-     * 用户组 - 启用.
+     * 用户 - 启用.
      */
     public function enable(User $model): User
     {
-        return $model;
+        return $this->repo->enable($model);
     }
 
     /**
-     * 用户组 - 禁用.
+     * 用户 - 禁用.
      */
     public function disable(User $model): User
     {
-        return $model;
+        return $this->repo->disable($model);
     }
 }
 

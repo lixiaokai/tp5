@@ -10,10 +10,9 @@ use app\common\validate\BaseValidate;
 class UserValidate extends BaseValidate
 {
     protected $rule = [
-        'nickname' => ['require'],
-        // 'phone' => ['require', 'length:11', 'mobile', 'unique:user'],
-        'phone' => ['require', 'length:11', 'mobile'],
-        'password' => ['require', 'length:6-20'],
+        'nickname' => ['require', 'min:2', 'max:15', 'unique:user'],
+        'phone' => ['require', 'length:11', 'mobile', 'unique:user'],
+        'password' => ['require', 'min:6', 'max:20'],
         'password_confirm' => ['require', 'confirm:password'],
         'status' => ['require', 'in:enable,disable'],
     ];
@@ -26,7 +25,11 @@ class UserValidate extends BaseValidate
         'status' => '状态',
     ];
 
-    protected function mobile($value)
+    protected $scene = [
+        'update'  =>  ['nickname', 'status'],
+    ];
+
+    protected function mobile(string $value)
     {
         return $this->regex($value, '/^1[3-9]\d{9}$/');
     }
