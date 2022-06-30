@@ -3,7 +3,7 @@
 namespace app\common\exception;
 
 use Exception;
-use think\App;
+use think\exception\DbException;
 use think\exception\HttpException;
 use think\exception\ValidateException;
 use think\Response;
@@ -41,6 +41,12 @@ class Handle extends \think\exception\Handle
             // 业务异常
             case $e instanceof BizException;
                 $this->code = $e->getCode();
+                $this->message = $e->getMessage();
+                break;
+
+            // 数据异常
+            case $e instanceof DbException;
+                $e->getCode() && $this->code = $e->getCode();
                 $this->message = $e->getMessage();
                 break;
         }
