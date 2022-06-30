@@ -44,9 +44,9 @@ class UserController extends BaseAdminController
      */
     public function read($id): Response
     {
-        $user = $this->service->get($id);
+        $model = $this->service->get($id);
 
-        return json(['code' => 200, 'data' => $user]);
+        return json(['code' => 200, 'data' => $model]);
     }
 
     /**
@@ -117,7 +117,7 @@ class UserController extends BaseAdminController
     /**
      * 显示编辑资源表单页.
      */
-    public function edit($id)
+    public function edit(int $id): void
     {
         //
     }
@@ -125,7 +125,7 @@ class UserController extends BaseAdminController
     /**
      * 显示创建资源表单页.
      */
-    public function create()
+    public function create(): void
     {
         //
     }
