@@ -6,7 +6,6 @@ use app\common\exception\DataNotFoundException;
 use app\common\exception\DataSaveErrorException;
 use app\common\model\User;
 use app\common\repository\UserRepository;
-use think\db\Query;
 use think\exception\DbException;
 use think\Paginator;
 
@@ -32,11 +31,12 @@ class UserService
      */
     public function search(array $search = []): Paginator
     {
-        return $this->repo->query->where(static function (Query $query) use ($search) {
-                ! empty($search['name']) && $query->where('name', 'like', '%' . $search['name'] . '%');
-        })
-            ->order('id', 'desc')
-            ->paginate();
+        // 查询 [ 昵称 ]
+        if (! empty($search['nickname'])) {
+            $this->repo->query->where('nickname', 'like', '%' . $search['nickname'] . '%');
+        }
+
+        return $this->repo->query->order('id', 'desc')->paginate();
     }
 
     /**
