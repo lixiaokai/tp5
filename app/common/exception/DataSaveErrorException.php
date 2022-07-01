@@ -12,4 +12,9 @@ class DataSaveErrorException extends DbException
     protected $message = '数据保存错误';
 
     protected $code = 500;
+
+    public function __construct($message = '')
+    {
+        $this->message = $message ?: '';
+    }
 }
