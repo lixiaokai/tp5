@@ -15,21 +15,22 @@ class Handle extends \think\exception\Handle
     /**
      * @var int 状态码
      */
-    protected $code = 500;
+    protected $code;
 
     /**
      * @var int HTTP 状态码
      */
-    protected $statusCode = 500;
+    protected $statusCode;
 
     /**
-     * @var string 默认异常消息
+     * @var string 异常消息
      */
     protected $message;
 
     public function render(Exception $e): Response
     {
         $this->message = $e->getMessage();
+        $this->statusCode = $this->code = $e->getCode();
 
         switch ($e) {
             // Http 异常
@@ -41,11 +42,6 @@ class Handle extends \think\exception\Handle
             case $e instanceof ValidateException:
                 $this->statusCode = $this->code = 422;
                 $this->message = $e->getError();
-                break;
-
-            // 业务异常
-            case $e instanceof BizException;
-                $this->statusCode = $this->code = $e->getCode();
                 break;
         }
 
