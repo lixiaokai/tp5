@@ -2,12 +2,12 @@
 
 namespace app\common\exception;
 
-use think\Exception;
+use think\exception\DbException;
 
 /**
  * 数据 - 异常类.
  */
-class DataSaveErrorException extends Exception
+class DataSaveErrorException extends DbException
 {
     protected $message = '数据保存错误';
 

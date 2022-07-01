@@ -3,7 +3,6 @@
 namespace app\common\exception;
 
 use Exception;
-use think\exception\DbException;
 use think\exception\HttpException;
 use think\exception\ValidateException;
 use think\Response;
@@ -14,9 +13,14 @@ use think\Response;
 class Handle extends \think\exception\Handle
 {
     /**
-     * @var int 默认状态码
+     * @var int 状态码
      */
     protected $code = 500;
+
+    /**
+     * @var int HTTP 状态码
+     */
+    protected $statusCode = 500;
 
     /**
      * @var string 默认异常消息
@@ -25,43 +29,32 @@ class Handle extends \think\exception\Handle
 
     public function render(Exception $e): Response
     {
+        $this->message = $e->getMessage();
+
         switch ($e) {
             // Http 异常
             case $e instanceof HttpException:
-                $this->code = $e->getStatusCode();
-                $this->message = $e->getMessage();
+                $this->statusCode = $this->code = $e->getStatusCode();
                 break;
 
             // 验证器异常
             case $e instanceof ValidateException:
-                $this->code = 422;
+                $this->statusCode = $this->code = 422;
                 $this->message = $e->getError();
                 break;
 
             // 业务异常
             case $e instanceof BizException;
-                $this->code = $e->getCode();
-                $this->message = $e->getMessage();
-                break;
-
-            // 数据异常
-            case $e instanceof DbException;
-                $e->getCode() && $this->code = $e->getCode();
-                $this->message = $e->getMessage();
+                $this->statusCode = $this->code = $e->getCode();
                 break;
         }
 
         $data = [
             'code' => $this->code,
-            'msg' => $this->message ?: $e->getMessage(),
+            'msg' => $this->message,
             'data' => null,
         ];
 
-        // 开启 debug 时附加数据
-        // if (App::$debug) {
-        //    $data['trace'] = $e->getTrace();
-        // }
-
-        return Response::create($data, 'json');
+        return Response::create($data, 'json', $this->statusCode);
     }
 }
