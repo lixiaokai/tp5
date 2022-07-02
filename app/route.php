@@ -17,6 +17,15 @@ Route::group('admin', static function () {
     Route::put('rbac/user/:id/enable', 'admin/rbac.user/enable');    // 启用
     Route::put('rbac/user/:id/disable', 'admin/rbac.user/disable');  // 禁用
 
+    // 角色管理
+    Route::get('rbac/role', 'admin/rbac.role/index');                // 列表
+    Route::get('rbac/role/:id', 'admin/rbac.role/read');             // 详情
+    Route::post('rbac/role', 'admin/rbac.role/save');                // 创建
+    Route::put('rbac/role/:id', 'admin/rbac.role/update');           // 修改
+    Route::delete('rbac/role/:id', 'admin/rbac.role/delete');        // 删除
+    Route::put('rbac/role/:id/enable', 'admin/rbac.role/enable');    // 启用
+    Route::put('rbac/role/:id/disable', 'admin/rbac.role/disable');  // 禁用
+
     Route::miss('admin/error/miss');
 });
 
