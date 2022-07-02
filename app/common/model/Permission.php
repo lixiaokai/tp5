@@ -7,7 +7,7 @@ use think\model\Collection;
 use think\model\relation\BelongsToMany;
 
 /**
- * 角色信息 - 模型.
+ * 权限信息 - 模型.
  *
  * @property int $id 角色 ID
  * @property string $name 名称
@@ -15,25 +15,14 @@ use think\model\relation\BelongsToMany;
  * @property string $created_at 创建时间
  * @property string $updated_at 修改时间
  *
- * @property-read Collection|User[] $users 用户信息
- * @property-read Collection|Permission[] $permissions 角色信息
+ * @property-read Collection|Role[] $roles 角色信息
  */
-class Role extends Model
+class Permission extends Model
 {
-    /**
-     * 状态 - 启用.
-     */
-    const STATUS_ENABLE = 'enable';
-
-    /**
-     * 状态 - 禁用.
-     */
-    const STATUS_DISABLE = 'disable';
-
     /**
      * @var string 完整表名
      */
-    protected $table = 'role';
+    protected $table = 'permission';
 
     protected $createTime = 'created_at';
     protected $updateTime = 'updated_at';
@@ -45,13 +34,8 @@ class Role extends Model
         'updated_at' =>  'datetime',
     ];
 
-    public function users(): BelongsToMany
+    public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, UserRole::class);
-    }
-
-    public function permissions(): BelongsToMany
-    {
-        return $this->belongsToMany(Permission::class, RolePermission::class);
+        return $this->belongsToMany(Role::class, RolePermission::class);
     }
 }

@@ -5,6 +5,7 @@ namespace app\common\model;
 use think\Model;
 use think\model\Collection;
 use think\model\relation\BelongsToMany;
+use think\model\relation\HasManyThrough;
 
 /**
  * 用户信息 - 模型.
@@ -49,6 +50,6 @@ class User extends Model
 
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class);
+        return $this->belongsToMany(Role::class, UserRole::class);
     }
 }
