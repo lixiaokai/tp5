@@ -26,6 +26,7 @@ Route::group('admin', static function () {
     Route::put('rbac/role/:id/enable', 'admin/rbac.role/enable');    // 启用
     Route::put('rbac/role/:id/disable', 'admin/rbac.role/disable');  // 禁用
 
+    Route::get('test-rbac', 'admin/testRbac/index');                 // 测试 ( )
     Route::miss('admin/error/miss');
 });
 
