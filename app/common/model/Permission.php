@@ -11,7 +11,7 @@ use think\model\relation\BelongsToMany;
  *
  * @property int $id 角色 ID
  * @property string $name 名称
- * @property string $status 状态 ( enable-启用 disable-禁用 )
+ * @property string $route 唯一权限路由标识
  * @property string $created_at 创建时间
  * @property string $updated_at 修改时间
  *

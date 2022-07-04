@@ -2,6 +2,7 @@
 
 namespace app\common\model;
 
+use think\helper\Arr;
 use think\Model;
 use think\model\Collection;
 use think\model\relation\BelongsToMany;
@@ -20,6 +21,7 @@ use think\model\relation\HasManyThrough;
  * @property string $updated_at 修改时间
  *
  * @property-read Collection|Role[] $roles 角色信息
+ * @property-read array $permissionRoutes 权限路由
  */
 class User extends Model
 {
@@ -47,6 +49,18 @@ class User extends Model
         'created_at' =>  'datetime',
         'updated_at' =>  'datetime',
     ];
+
+    public function getPermissionRoutesAttr(): array
+    {
+        $routes = [];
+
+        /* @var Role $role */
+        foreach ($this->roles as $role) {
+            $routes = array_unique(array_merge($routes, $role->permissions->column('route')));
+        }
+
+        return $routes;
+    }
 
     public function roles(): BelongsToMany
     {

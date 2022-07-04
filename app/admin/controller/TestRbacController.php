@@ -3,7 +3,6 @@
 namespace app\admin\controller;
 
 use app\common\controller\BaseAdminController;
-use app\common\service\RbacService;
 use think\Config;
 use think\Request;
 use think\Response;
@@ -24,10 +23,6 @@ class TestRbacController extends BaseAdminController
 
     public function index(): Response
     {
-        $rbac = new RbacService();
-
-        $rbac->check();
-
-        return response(url('admin/rbac.user/index'));
+        return response();
     }
 }
