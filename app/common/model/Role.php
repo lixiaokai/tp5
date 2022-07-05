@@ -23,12 +23,12 @@ class Role extends Model
     /**
      * 状态 - 启用.
      */
-    const STATUS_ENABLE = 'enable';
+    public const STATUS_ENABLE = 'enable';
 
     /**
      * 状态 - 禁用.
      */
-    const STATUS_DISABLE = 'disable';
+    public const STATUS_DISABLE = 'disable';
 
     /**
      * @var string 完整表名

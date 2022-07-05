@@ -2,11 +2,9 @@
 
 namespace app\common\model;
 
-use think\helper\Arr;
 use think\Model;
 use think\model\Collection;
 use think\model\relation\BelongsToMany;
-use think\model\relation\HasManyThrough;
 
 /**
  * 用户信息 - 模型.
@@ -28,12 +26,12 @@ class User extends Model
     /**
      * 状态 - 启用.
      */
-    const STATUS_ENABLE = 'enable';
+    public const STATUS_ENABLE = 'enable';
 
     /**
      * 状态 - 禁用.
      */
-    const STATUS_DISABLE = 'disable';
+    public const STATUS_DISABLE = 'disable';
 
     /**
      * @var string 完整表名
@@ -52,10 +50,10 @@ class User extends Model
 
     public function getPermissionRoutesAttr(): array
     {
-        $routes = [];
-
         /* @var Role $role */
-        foreach ($this->roles as $role) {
+
+        $routes = [];
+        foreach ($this->roles->load('permissions') as $role) {
             $routes = array_unique(array_merge($routes, $role->permissions->column('route')));
         }
 
