@@ -23,6 +23,11 @@ class TestRbacController extends BaseAdminController
 
     public function index(): Response
     {
-        return response();
+        return response('');
+    }
+
+    public function type(): Response
+    {
+        return response('');
     }
 }

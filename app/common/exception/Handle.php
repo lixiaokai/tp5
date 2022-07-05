@@ -51,6 +51,8 @@ class Handle extends \think\exception\Handle
             'data' => null,
         ];
 
-        return Response::create($data, 'json', $this->statusCode);
+        return parent::render($e);
+
+        // return Response::create($data, 'json', $this->statusCode);
     }
 }
