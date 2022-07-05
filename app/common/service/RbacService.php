@@ -62,7 +62,7 @@ class RbacService
     /**
      * 无需权限检查.
      */
-    public function noCheck(string $route): bool
+    protected function noCheck(string $route): bool
     {
         return in_array($route, $this->config['no_check'], true);
     }
