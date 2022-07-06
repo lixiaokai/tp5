@@ -2,6 +2,12 @@
 
 namespace app\common\model;
 
+use app\common\exception\BizException;
+use app\common\ide\IDEJWTPayloadStdClass;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+use stdClass;
+use think\Config;
 use think\model\Collection;
 use think\model\relation\BelongsToMany;
 
@@ -57,6 +63,49 @@ class User extends BaseModel
         }
 
         return $routes;
+    }
+
+    /**
+     * 编码 - JWT.
+     *
+     * @throws BizException
+     */
+    public function JWTEncode(): string
+    {
+        $key = Config::get('jwt_key');
+        if (empty($key)) {
+            throw new BizException('jwt_key 未设置');
+        }
+
+        $time = time();
+        $payload = [
+            'iss' => 'auth',                     // 签发者
+            'sub' => 'token',                    // 主题
+            'iat' => $time,                      // 签发时间
+            'exp' => $time + 86400,              // 过期时间 ( 1 天后 )
+            'uid' => $this->getAttr('id'), // 携带数据
+        ];
+
+        return JWT::encode($payload, $key, 'HS256');
+    }
+
+    /**
+     * 解码 - JWT.
+     *
+     * @param string $jwt 已编码的 JWT 字符串
+     * @return IDEJWTPayloadStdClass
+     * @throws BizException
+     */
+    public function JWTDecode(string $jwt): stdClass
+    {
+        $key = Config::get('jwt_key');
+        if (empty($key)) {
+            throw new BizException('jwt_key 未设置');
+        }
+
+        JWT::$leeway = 60; // 把时间留点余地
+
+        return JWT::decode($jwt, new Key($key, 'HS256'));
     }
 
     public function roles(): BelongsToMany

@@ -19,7 +19,8 @@
         "php": ">=7.1.0",
         "topthink/framework": "5.0.*",
         "topthink/think-helper": "^1.0",
-        "ext-json": "*"
+        "ext-json": "*",
+        "firebase/php-jwt": "^6.2"
     },
     "autoload": {
         "psr-4": {
