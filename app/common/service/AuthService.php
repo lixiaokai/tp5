@@ -44,25 +44,32 @@ class AuthService
      */
     public function login(string $identity, string $password, bool $remember = false): bool
     {
+        // 1. 检查输入的账号和密码
         if (empty($identity) || empty($password)) {
             return $this->setError('登录失败');
         }
-        // 检查是否超过最大登录次数
+        // 2. 检查是否超过最大登录次数
         if ($this->isMaxLoginAttemptsExceeded($identity)) {
             return $this->setError('账号暂时被锁定，请稍后再试');
         }
 
+        // 根据账号标识获取用户信息
         $user = User::get([$this->config['identityColumn'] => $identity]);
+
+        // 3. 检查用户账号
         if (! $user) {
             return $this->setError('账号不存在，请联系账号管理员处理');
         }
+        // 4. 检查用户状态
         if ($user->status === User::STATUS_DISABLE) {
             return $this->setError('账号已禁用，请联系账号管理员处理');
         }
+        // 5. 验证密码
         if (! self::verifyPassword($password, $user->salt, $user->password)) {
             return $this->setError('密码错误，请重新输入');
         }
 
+        // 记住用户
         $remember && $this->rememberUser($identity);
 
         return true;
