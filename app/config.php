@@ -197,13 +197,24 @@ return [
 
     'cache'                  => [
         // 驱动方式
-        'type'   => 'File',
-        // 缓存保存目录
-        'path'   => CACHE_PATH,
-        // 缓存前缀
-        'prefix' => '',
-        // 缓存有效期 0表示永久缓存
-        'expire' => 0,
+        'type'  =>  'complex',
+        // 默认使用的缓存
+        'default'   =>  [
+            'type'   => Env::get('cache.driver', 'file'),         // 驱动方式
+        ],
+        'file'   =>  [
+            'type'   => 'file',                 // 驱动方式
+            'path'   => CACHE_PATH,             // 缓存保存目录
+            'expire' => 0,                      // 缓存有效期 0 表示永久缓存
+        ],
+        'redis'   =>  [
+            'type'     => 'redis',                                             // 驱动方式
+            'host'     => Env::get('redis.host', '127.0.0.1'),    // 服务器地址
+            'port'     => Env::get('redis.port', 6379),           // 端口号
+            'password' => Env::get('redis.password', '123456'),   // 密码
+            'select'   => Env::get('redis.db', 0),                // 数据库
+            'expire'   => 0,                                                   // 缓存有效期 0 表示永久缓存
+        ],
     ],
 
     // +----------------------------------------------------------------------
@@ -247,5 +258,10 @@ return [
         'type'      => 'bootstrap',
         'var_page'  => 'page',
         'list_rows' => 15,
+    ],
+
+    // jwt
+    'jwt' => [
+        'key' => Env::get('jwt.key'),
     ],
 ];
