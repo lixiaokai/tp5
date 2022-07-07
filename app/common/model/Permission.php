@@ -2,7 +2,6 @@
 
 namespace app\common\model;
 
-use think\Model;
 use think\model\Collection;
 use think\model\relation\BelongsToMany;
 
@@ -17,7 +16,7 @@ use think\model\relation\BelongsToMany;
  *
  * @property-read Collection|Role[] $roles 角色信息
  */
-class Permission extends Model
+class Permission extends BaseModel
 {
     /**
      * @var string 完整表名

@@ -2,7 +2,6 @@
 
 namespace app\common\model;
 
-use think\Model;
 use think\model\Collection;
 use think\model\relation\BelongsToMany;
 
@@ -18,7 +17,7 @@ use think\model\relation\BelongsToMany;
  * @property-read Collection|User[] $users 用户信息
  * @property-read Collection|Permission[] $permissions 角色信息
  */
-class Role extends Model
+class Role extends BaseModel
 {
     /**
      * 状态 - 启用.
