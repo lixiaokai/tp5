@@ -2,6 +2,7 @@
 
 namespace app\common\service;
 
+use app\common\exception\BizException;
 use app\common\model\User;
 use think\Config;
 use think\exception\DbException;
@@ -24,7 +25,6 @@ class AuthService
 
         'trackLoginAttempts'    => false,       // 是否记录登录尝试
         'maximumLoginAttempts'  => 5,           // 最大登录尝试次数
-
     ];
 
     /**
@@ -40,17 +40,17 @@ class AuthService
     /**
      * 登录.
      *
-     * @throws DbException
+     * @throws BizException|DbException
      */
-    public function login(string $identity, string $password, bool $remember = false): bool
+    public function login(string $identity, string $password, bool $remember = false): User
     {
         // 1. 检查输入的账号和密码
         if (empty($identity) || empty($password)) {
-            return $this->setError('登录失败');
+            throw new BizException('登录失败');
         }
         // 2. 检查是否超过最大登录次数
         if ($this->isMaxLoginAttemptsExceeded($identity)) {
-            return $this->setError('账号暂时被锁定，请稍后再试');
+            throw new BizException('账号暂时被锁定，请稍后再试');
         }
 
         // 根据账号标识获取用户信息
@@ -58,21 +58,21 @@ class AuthService
 
         // 3. 检查用户账号
         if (! $user) {
-            return $this->setError('账号不存在，请联系账号管理员处理');
+            throw new BizException('账号不存在，请联系账号管理员处理');
         }
         // 4. 检查用户状态
         if ($user->status === User::STATUS_DISABLE) {
-            return $this->setError('账号已禁用，请联系账号管理员处理');
+            throw new BizException('账号已禁用，请联系账号管理员处理');
         }
-        // 5. 验证密码
+        // 5. 检查密码是否匹配
         if (! self::verifyPassword($password, $user->salt, $user->password)) {
-            return $this->setError('密码错误，请重新输入');
+            throw new BizException('密码错误，请重新输入');
         }
 
         // 记住用户
         $remember && $this->rememberUser($identity);
 
-        return true;
+        return $user;
     }
 
     /**
