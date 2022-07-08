@@ -37,9 +37,7 @@ class BaseAdminController extends BaseController
      */
     protected function uid(): int
     {
-        $authorization = $this->request->header('authorization') ?? '';
-        $token = JWTService::token($authorization);
-
+        $token = JWTService::getToken($this->request);
         return JWTService::decode($token)->uid;
     }
 }

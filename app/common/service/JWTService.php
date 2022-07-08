@@ -12,16 +12,17 @@ use Firebase\JWT\Key;
 use stdClass;
 use think\Config;
 use think\Log;
+use think\Request;
 
 class JWTService
 {
     /**
      * 获取 - token.
      */
-    public static function token(string $authorization): string
+    public static function getToken(Request $request): string
     {
         // Todo: 暂时隐藏起来
-        // return substr_count($authorization,'Bearer ') === 1 ? substr($authorization,7) : '';
+        // return trim(str_ireplace('bearer', '', $request->header('authorization', '')));
 
         $token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.';
         $token .= 'eyJpc3MiOiJhdXRoIiwic3ViIjoidG9rZW4iL';
