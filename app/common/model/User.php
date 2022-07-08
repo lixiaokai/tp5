@@ -47,6 +47,8 @@ class User extends BaseModel
         'updated_at' =>  'datetime',
     ];
 
+    protected $hidden = ['password', 'salt'];
+
     public function getPermissionRoutesAttr(): array
     {
         /* @var Role $role */
