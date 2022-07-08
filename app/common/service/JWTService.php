@@ -3,21 +3,32 @@
 namespace app\common\service;
 
 use app\common\exception\BizException;
+use app\common\exception\UnauthorizedException;
 use app\common\ide\IDEJWTPayloadStdClass;
 use app\common\model\User;
+use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use stdClass;
 use think\Config;
+use think\Log;
 
 class JWTService
 {
     /**
-     * 支持：ES384、ES256、HS256、HS384、HS512、RS256、RS384、RS512.
-     *
-     * @var string 算法
+     * 获取 - token.
      */
-    public static $alg = 'HS256';
+    public static function token(string $authorization): string
+    {
+        // Todo: 暂时隐藏起来
+        // return substr_count($authorization,'Bearer ') === 1 ? substr($authorization,7) : '';
+
+        $token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.';
+        $token .= 'eyJpc3MiOiJhdXRoIiwic3ViIjoidG9rZW4iL';
+        $token .= 'CJpYXQiOjE2NTcxODA5NDQsImV4cCI6MTY1NzI2NzM0NCwidWlkIjoxfQ.';
+        $token .= 'qlxdFel1mqKRcx7S7kgJxovCUdAdoDNDeuQDT1qIW8Y';
+        return $token;
+    }
 
     /**
      * 编码 - JWT.
@@ -35,7 +46,7 @@ class JWTService
             'uid' => $user->id,     // 携带数据
         ];
 
-        return JWT::encode($payload, self::key(), self::$alg);
+        return JWT::encode($payload, self::key(), 'HS256');
     }
 
     /**
@@ -43,12 +54,17 @@ class JWTService
      *
      * @param string $jwt 已编码的 JWT 字符串
      * @return IDEJWTPayloadStdClass
-     * @throws BizException
+     * @throws UnauthorizedException
      */
     public static function decode(string $jwt): stdClass
     {
-        JWT::$leeway = 60; // 当前时间减去 60，留点余地
-        return JWT::decode($jwt, new Key(self::key(), self::$alg));
+        try {
+            JWT::$leeway = 60; // 当前时间减去 60，留点余地
+            return JWT::decode($jwt, new Key(self::key(), 'HS256'));
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            throw new UnauthorizedException();
+        }
     }
 
     /**

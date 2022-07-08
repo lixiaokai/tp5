@@ -2,10 +2,11 @@
 
 namespace app\common\controller;
 
+use app\common\exception\UnauthorizedException;
 use app\common\model\User;
+use app\common\service\JWTService;
 use app\common\service\RbacService;
 use think\exception\DbException;
-use think\Request;
 
 /**
  * admin 控制器 - 基类.
@@ -13,12 +14,14 @@ use think\Request;
 class BaseAdminController extends BaseController
 {
     /**
-     * @throws DbException
+     * @throws DbException|UnauthorizedException
      */
     protected function _initialize(): void
     {
+        parent::_initialize();
+
         // 属性注入
-        Request::instance()->bind('user', User::get($this->uid()));
+        $this->request->bind('user', User::get($this->uid()));
 
         // 权限控制
         $rbac = RbacService::instance();
@@ -29,9 +32,14 @@ class BaseAdminController extends BaseController
 
     /**
      * 获取 - 用户 id.
+     *
+     * @throws UnauthorizedException
      */
     protected function uid(): int
     {
-        return 1;
+        $authorization = $this->request->header('authorization') ?? '';
+        $token = JWTService::token($authorization);
+
+        return JWTService::decode($token)->uid;
     }
 }
