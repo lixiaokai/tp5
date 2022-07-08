@@ -28,7 +28,7 @@ class TestRbacController extends BaseAdminController
 
     public function index(): Response
     {
-        $this->testLogin();
+        // $this->testLogin();
         return response('index');
     }
 

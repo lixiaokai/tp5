@@ -3,6 +3,7 @@
 namespace app\common\controller;
 
 use app\common\exception\UnauthorizedException;
+use app\common\ide\IDERequest;
 use app\common\model\User;
 use app\common\service\JWTService;
 use app\common\service\RbacService;
@@ -13,6 +14,11 @@ use think\exception\DbException;
  */
 class BaseAdminController extends BaseController
 {
+    /**
+     * @var IDERequest Request 注释类
+     */
+    protected $request;
+
     /**
      * @throws DbException|UnauthorizedException
      */
