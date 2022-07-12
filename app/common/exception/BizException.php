@@ -9,7 +9,7 @@ use think\Exception;
  */
 class BizException extends Exception
 {
-    protected $message = '授权失败';
+    protected $message = '业务异常';
 
     protected $code = 400;
 }
